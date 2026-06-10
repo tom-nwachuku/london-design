@@ -95,10 +95,16 @@ def test_validate_chassis_default_error_is_source_checkout_specific(monkeypatch,
     assert "--captures-dir" in error
 
 
+def _strip_ansi(text: str) -> str:
+    """Strip ANSI escapes — rich force-enables terminal styling in CI runners."""
+    import re as _re
+    return _re.sub(r"\x1b\[[0-9;]*m", "", text)
+
+
 def test_validate_chassis_help(capsys):
     main(["validate-chassis", "--help"])
 
-    output = capsys.readouterr().out
+    output = _strip_ansi(capsys.readouterr().out)
 
     assert "Usage: london validate-chassis" in output
     # --captures-dir is a real Typer option; the rich-formatted help breaks up

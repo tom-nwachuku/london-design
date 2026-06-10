@@ -20,6 +20,12 @@ def present_module(_: str) -> bool:
     return True
 
 
+def _plain(text: str) -> str:
+    """Strip ANSI escapes — rich force-enables terminal styling in CI runners."""
+    import re
+    return re.sub(r"\x1b\[[0-9;]*m", "", text)
+
+
 def test_provider_registry_lists_local_generators_before_api_lanes():
     providers = provider_registry()
 
@@ -677,7 +683,7 @@ def test_public_setup_provider_config_help_surfaces(capsys):
 
     for args, expected in help_cases:
         main(args)
-        output = capsys.readouterr().out
+        output = _plain(capsys.readouterr().out)
         assert expected in output
         if args == ["setup", "--help"]:
             assert "--live" in output
