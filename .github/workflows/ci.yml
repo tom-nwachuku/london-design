@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-build-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync
+        run: uv sync
+
+      - name: Test
+        run: uv run pytest -q
+
+      - name: Build
+        run: uv build
+
+      - name: Installed wheel smoke
+        run: |
+          python -m venv /tmp/london-wheel-smoke
+          /tmp/london-wheel-smoke/bin/python -m pip install --upgrade pip
+          /tmp/london-wheel-smoke/bin/python -m pip install dist/*.whl
+          cat > /tmp/london-ci-brief.md <<'EOF'
+          # Brief
+
+          A joyful retro-futurist lunchbox ritual kit for kids and parents.
+          EOF
+          /tmp/london-wheel-smoke/bin/london setup --json
+          /tmp/london-wheel-smoke/bin/london /tmp/london-ci-brief.md --offline --out /tmp/london-ci-pack
+          if /tmp/london-wheel-smoke/bin/london launch-gate /tmp/london-ci-pack; then
+            echo "offline/manual-prompt launch gate unexpectedly passed"
+            exit 1
+          fi
+          /tmp/london-wheel-smoke/bin/python -c "import json; json.load(open('/tmp/london-ci-pack/london-pack.json'))"
+
+      - name: Ruff
+        run: uvx ruff check src/london tests
+
+      - name: Safety grep
+        run: |
+          fail=0
+          # Secret-pattern scan: any hit exits non-zero.
+          grep -RInE 'sk-ant|AIza' src tests README.md docs/providers.md && fail=1
+          # Local path scan: hits fail UNLESS they are inside the documented
+          # test fixture that carries an EXPECTED-FIXTURE marker comment.
+          grep -RInE '/Users/[A-Za-z0-9._-]+' src tests README.md docs/providers.md \
+            | grep -v 'EXPECTED-FIXTURE' && fail=1
+          exit $fail

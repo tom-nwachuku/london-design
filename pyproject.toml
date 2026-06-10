@@ -1,0 +1,94 @@
+[project]
+name = "london-design"
+version = "0.1.0"
+description = "London Osei, a fictional creative director CLI for design research, direction, dossiers, and build handoff."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "London Design Contributors" }
+]
+dependencies = [
+  "chromadb>=0.5.0",
+  "rich>=13.7.0",
+  "typer>=0.12.0",
+  # The director contract is a Pydantic model whose model_json_schema() feeds the gate.
+  "pydantic>=2,<3",
+  # Promoted dev -> runtime: the write-time pack hard-gate (validate_pack) is now runtime.
+  "jsonschema>=4.0",
+  # Real engine (04.6): the brain MCP server + the in-session model director are base.
+  # Claude Code users get both without opting into an extra. Both are first-party/official
+  # (modelcontextprotocol.io + Anthropic); see threat register T-04.6-SC.
+  "mcp>=1.2.0",
+  "claude-agent-sdk>=0.2.0",
+  # Guided installer TUI (Phase 08.7). Pure Python; rich is already a base dep.
+  "textual>=0.80",
+]
+
+# Optional extras (D-04/D-05). The base package is model-driven; the model SDKs and the
+# offline path are opt-in. The offline banks ship in-package (mechanism (a)); the
+# [offline] extra is the runtime GATE marker, not a code split.
+[project.optional-dependencies]
+director = []                            # in-session model director — now BASE (claude-agent-sdk); kept as a back-compat alias
+api = ["anthropic>=0.69"]                # keyed standalone director (ANTHROPIC_API_KEY)
+offline = []                             # --offline gate marker; deterministic banks ship in-package
+
+[dependency-groups]
+dev = [
+  "build>=1.2.2",
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+london = "london.cli:main"
+london-brain-mcp = "london.brain_mcp:main"
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/london"]
+
+[tool.hatch.build]
+exclude = [
+  "/.scratch",
+  "/.env*",
+  "/.playwright-cli",
+  "/brain/chromadb",
+  "/data/extractions",
+  "/data/metadata",
+  "/data/videos",
+  "/dist",
+  "/output",
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/london/data/london_brain.sqlite" = "london/data/london_brain.sqlite"
+"src/london/data/README.md" = "london/data/README.md"
+"src/london/data/london-pack.schema.json" = "london/data/london-pack.schema.json"
+"src/london/data/type_shelf.json" = "london/data/type_shelf.json"
+# NOTE: the london-creative-director skill ships as package data under
+# src/london/skill_data/ (04.6-05). Its .md files live inside the wheel package root
+# (src/london/), so hatchling auto-includes them — NO force-include here (a force-include
+# would add them a second time and fail the build). The in-session engine discovers the
+# skill from the filesystem (setting_sources + skills + cwd); a pip-installed London
+# materializes this packaged copy into a per-user .claude/skills/ layout at run time.
+
+[tool.hatch.build.targets.sdist.force-include]
+".env.example" = ".env.example"
+"src/london/data/london_brain.sqlite" = "src/london/data/london_brain.sqlite"
+"src/london/data/README.md" = "src/london/data/README.md"
+"src/london/data/london-pack.schema.json" = "src/london/data/london-pack.schema.json"
+"src/london/data/type_shelf.json" = "src/london/data/type_shelf.json"
+"src/london/data/fonts" = "src/london/data/fonts"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
