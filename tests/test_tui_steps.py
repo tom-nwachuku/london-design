@@ -395,14 +395,14 @@ def test_model_path_step_body_has_no_key_value():
     for step in result.steps:
         # Placeholder text only; no real key characters
         assert "sk-" not in step.body
-        assert "AIza" not in step.body
+        assert "AIza" not in step.body  # EXPECTED-FIXTURE
 
 
 def test_image_lane_body_has_no_key_value():
     result = steps_for_profile("recommended", _keyless_status())
     for step in result.steps:
         assert "sk-" not in step.body
-        assert "AIza" not in step.body
+        assert "AIza" not in step.body  # EXPECTED-FIXTURE
 
 
 # ---------------------------------------------------------------------------

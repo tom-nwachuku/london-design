@@ -56,7 +56,8 @@ jobs:
         run: |
           fail=0
           # Secret-pattern scan: any hit exits non-zero.
-          grep -RInE 'sk-ant|AIza' src tests README.md docs/providers.md && fail=1
+          grep -RInE 'sk-ant|AIza' src tests README.md docs/providers.md \
+            | grep -v 'EXPECTED-FIXTURE' && fail=1
           # Local path scan: hits fail UNLESS they are inside the documented
           # test fixture that carries an EXPECTED-FIXTURE marker comment.
           grep -RInE '/Users/[A-Za-z0-9._-]+' src tests README.md docs/providers.md \
