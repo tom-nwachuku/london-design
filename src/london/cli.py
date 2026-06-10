@@ -48,7 +48,6 @@ from london.intake import build_intake_markdown, write_intake_html
 from london.launch import evaluate_launch_gates
 from london.gallery import write_gallery
 from london.library import (
-    DEFAULT_BRAIN_DB,
     DEFAULT_CHROMA_DIR,
     readonly_sqlite_uri,
 )

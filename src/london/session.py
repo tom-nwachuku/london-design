@@ -19,7 +19,7 @@ from london.director import (
     SessionLane,
 )
 from london import grader
-from london.library import DEFAULT_BRAIN_DB, QueryHit
+from london.library import QueryHit
 from london.models import GATE_IDS, GATE_NAMES
 from london.persona import (
     GATE_QUERY_TEMPLATES,

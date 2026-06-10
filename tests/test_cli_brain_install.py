@@ -154,7 +154,6 @@ def test_brain_install_resolves_through_resolve_brain_path_for_inventory_and_ses
     silently ignored by half the product.
     """
     from london import brain_loader
-    from london import session as session_mod
 
     # Build a marker brain with a uniquely recognisable title.
     marker_title = "W2-P1-SPLIT-BRAIN-MARKER-UNIQUE-ENTRY"

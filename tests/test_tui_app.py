@@ -14,11 +14,9 @@ from __future__ import annotations
 
 import builtins
 import importlib
-import os
 import sys
 from pathlib import Path
-from typing import Any
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -154,47 +152,41 @@ def _make_app(status: dict):
 
 @pytest.mark.anyio
 async def test_app_boots_keyless():
-    from textual.pilot import Pilot
     app = _make_app(_keyless())
-    async with app.run_test() as pilot:
+    async with app.run_test() as _pilot:
         assert app.is_running
 
 
 @pytest.mark.anyio
 async def test_app_boots_in_session():
-    from textual.pilot import Pilot
     app = _make_app(_in_session())
-    async with app.run_test() as pilot:
+    async with app.run_test() as _pilot:
         assert app.is_running
 
 
 @pytest.mark.anyio
 async def test_app_boots_keyed():
-    from textual.pilot import Pilot
     app = _make_app(_keyed())
-    async with app.run_test() as pilot:
+    async with app.run_test() as _pilot:
         assert app.is_running
 
 
 @pytest.mark.anyio
 async def test_app_boots_paid_ready():
-    from textual.pilot import Pilot
     app = _make_app(_paid_ready())
-    async with app.run_test() as pilot:
+    async with app.run_test() as _pilot:
         assert app.is_running
 
 
 @pytest.mark.anyio
 async def test_app_boots_blocked():
-    from textual.pilot import Pilot
     app = _make_app(_blocked())
-    async with app.run_test() as pilot:
+    async with app.run_test() as _pilot:
         assert app.is_running
 
 
 @pytest.mark.anyio
 async def test_q_exits_from_splash():
-    from textual.pilot import Pilot
     app = _make_app(_keyless())
     async with app.run_test() as pilot:
         await pilot.press("q")
@@ -204,11 +196,10 @@ async def test_q_exits_from_splash():
 @pytest.mark.anyio
 async def test_wordmark_in_splash():
     """Splash screen must render the wordmark text."""
-    from textual.pilot import Pilot
     from london.tui.app import WORDMARK_LINES
     app = _make_app(_keyless())
-    async with app.run_test(size=(80, 24)) as pilot:
-        content = app.screen.query("Static").first().render()
+    async with app.run_test(size=(80, 24)) as _pilot:
+        _content = app.screen.query("Static").first().render()
         # Content is Rich renderable; check via the exported lines constant
         assert len(WORDMARK_LINES) == 6
         # Each line contains block characters
@@ -276,21 +267,21 @@ async def test_done_screen_correct_command_keyless():
     from london.tui.steps import steps_for_profile
     profile_steps = steps_for_profile("core", _keyless())
     app = _make_app(_keyless())
-    async with app.run_test() as pilot:
+    async with app.run_test() as _pilot:
         # Push the done screen directly
         from london.tui.app import DoneScreen
         await app.push_screen(DoneScreen(profile_steps, _keyless()))
         content_widgets = app.screen.query("#done-cmd")
         if content_widgets:
             text = str(content_widgets.first().render())
-            # Should contain the offline command
-            assert "--offline" in profile_steps.first_command
+            # The done screen must render the actual first command
+            assert profile_steps.first_command in text
+        assert "--offline" in profile_steps.first_command
 
 
 @pytest.mark.anyio
 async def test_done_screen_correct_command_in_session():
     """Done screen for in-session shows the live command."""
-    from london.tui.app import DoneScreen
     from london.tui.steps import steps_for_profile
     profile_steps = steps_for_profile("core", _in_session())
     # in-session core: no steps, command does not require --offline
@@ -376,8 +367,6 @@ def test_machine_flag_skips_tui(flags, monkeypatch, tmp_path):
     """Each machine flag must bypass the TUI and hit the text path."""
     launched = []
 
-    import sys
-    from io import StringIO
 
     # Ensure stdin/stdout appear as TTYs (so only the flag suppresses TUI)
     with patch("sys.stdin") as mock_stdin, patch("sys.stdout") as mock_stdout:
@@ -537,7 +526,7 @@ def test_splash_wordmark_markup_wide():
 
 
 def test_splash_wordmark_markup_narrow_fallback():
-    from london.tui.app import _wordmark_markup, BOXED_HEADER
+    from london.tui.app import _wordmark_markup
     markup = _wordmark_markup(40)
     assert "LONDON" in markup
     # Should be the boxed fallback

@@ -6,11 +6,9 @@ import importlib
 import sys
 from typing import Any
 
-import pytest
 
 from london.tui.steps import (
     PROFILE_ROWS,
-    GuidedStep,
     ProfileSteps,
     capability_map_rows,
     collect_setup_status_summary,

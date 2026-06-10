@@ -172,7 +172,6 @@ def _steps_core(s: dict[str, Any]) -> ProfileSteps:
     if not s["in_session"] and not s["api_ready"]:
         steps.append(_model_path_step(s, step_n=len(steps) + 1, total=None))
 
-    total = len(steps) + 1  # +1 for the implicit "all set" step
     # Renumber if we added steps
     for i, step in enumerate(steps):
         step.subtitle = f"step {i + 1} of {len(steps)} · {_step_subtitle_label(step.id)}"

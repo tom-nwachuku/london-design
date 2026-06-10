@@ -5,10 +5,7 @@ the ``collect_setup_status()`` dict and launches the Textual App.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable
-
-if TYPE_CHECKING:
-    from london.tui.app import SetupApp
+from typing import Callable
 
 StatusProvider = Callable[[], dict]
 

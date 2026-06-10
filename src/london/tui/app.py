@@ -17,17 +17,15 @@ import sys
 from pathlib import Path
 from typing import Any, Callable
 
-from textual import on
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container, Vertical
 from textual.css.query import NoMatches
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, ListItem, ListView, Static
+from textual.widgets import Static
 
 from london.tui.steps import (
     PROFILE_ROWS,
-    GuidedStep,
     ProfileSteps,
     capability_map_rows,
     steps_for_profile,
@@ -710,7 +708,7 @@ class DoneScreen(Screen):
             Static(f"    $ {cmd}", id="done-cmd"),
             Static(f"\n  {note}", id="done-note"),
             Static(
-                f"\n    [ c ] copy command        [ q ] done",
+                "\n    [ c ] copy command        [ q ] done",
                 id="done-actions",
             ),
             id="done-container",

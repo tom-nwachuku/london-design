@@ -5,7 +5,6 @@ from london.render import render_dossier
 from london.session import run_london_session
 from london.image_generation import (
     ImageGenerationRequest,
-    ImageGenerationResult,
     _unavailable_result,
     _live_result,
 )
