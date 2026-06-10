@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="20" width="148" font-family="Verdana,Geneva,sans-serif" font-size="11">
+  <rect rx="3" width="148" height="20" fill="#555"/>
+  <rect rx="3" x="62" width="86" height="20" fill="#ff6b35"/>
+  <rect x="62" width="4" height="20" fill="#ff6b35"/>
+  <text x="31" y="14" fill="#fff" text-anchor="middle">API keys</text>
+  <text x="105" y="14" fill="#fff" text-anchor="middle">zero needed</text>
+</svg>

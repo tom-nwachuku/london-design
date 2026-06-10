@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="20" width="94" font-family="Verdana,Geneva,sans-serif" font-size="11">
+  <rect rx="3" width="94" height="20" fill="#555"/>
+  <rect rx="3" x="56" width="38" height="20" fill="#97ca00"/>
+  <rect x="56" width="4" height="20" fill="#97ca00"/>
+  <text x="28" y="14" fill="#fff" text-anchor="middle">license</text>
+  <text x="75" y="14" fill="#fff" text-anchor="middle">MIT</text>
+</svg>
