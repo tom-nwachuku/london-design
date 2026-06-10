@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+env:
+  NO_COLOR: "1"
+  COLUMNS: "120"
+
 jobs:
   test-build-smoke:
     runs-on: ubuntu-latest

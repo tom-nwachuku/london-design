@@ -226,7 +226,12 @@ def _read_bundled_font(entry: TypeShelfEntry) -> bytes:
     if path.is_absolute() or ".." in path.parts:
         raise TypeShelfError(f"{entry.family} has an unsafe bundled asset path.")
     try:
-        return files("london.data").joinpath(*path.parts).read_bytes()
+        # Chain single joinpath calls: MultiplexedPath.joinpath() accepted only one
+        # argument before Python 3.12, and installed packages can resolve to one.
+        resource = files("london.data")
+        for part in path.parts:
+            resource = resource.joinpath(part)
+        return resource.read_bytes()
     except FileNotFoundError as exc:
         raise TypeShelfError(f"{entry.family} bundled font asset is missing from the package.") from exc
 
