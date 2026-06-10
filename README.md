@@ -10,7 +10,7 @@
   <img src=".github/assets/badge-zero-keys.svg" alt="zero API keys needed">
 </p>
 
-<p align="center"><img src=".github/assets/briefs-typewriter.svg" alt='$ london "a coffee brand for night-shift nurses"' width="760"></p>
+<p align="center"><img src=".github/assets/briefs-typewriter-v2.svg" alt='$ london "a coffee brand for night-shift nurses"' width="760"></p>
 
 <p align="center"><sub>one line in → research, two competing visual routes, type &amp; color with receipts, a build handoff</sub></p>
 
